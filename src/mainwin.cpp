@@ -17,8 +17,9 @@ void alphaWindow::startLoop()
     }
     else
     {
-        pcout{} << "Log reader " << logreader.status_s() << "\n";
+        pcout{} << "File not found" << logreader.getPatch() <<"\n";
     }
+    pcout{} << "Exit threadParserStart\n";
 }
 
 void alphaWindow::stopLoop()
