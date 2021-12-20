@@ -158,6 +158,27 @@ bool Logreader::status() const noexcept
     return run;
 }
 
+std::string Logreader::status_s() const noexcept
+{
+    switch(_status)
+    {
+        case Logerstatus::LOG_FILE_ERROR :
+            return "Error";
+        break;
+        case Logerstatus::LOG_FILE_OK :
+            return "Ok";
+        break;
+        case Logerstatus::LOG_FILE_RUN :
+            return "Run";
+        break;
+        case Logerstatus::LOG_FILE_STOP :
+            return "Stop";
+        break;
+        default:
+            return "Unknown status";
+    }
+}
+
 std::filesystem::path Logreader::getPatch() const noexcept
 {
     return _path;

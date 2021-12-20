@@ -33,8 +33,15 @@ qt5_wrap_cpp (MAIN_SOURCES ${MY_INCLUDE_DIR}/mainwin.h)
 #------------------------------------------
 
 #---------------BOOST----------------------
-set(Boost_INCLUDE_DIR "C:/boost/boost_1_78_0")
-set(Boost_LYBRARY_DIR "C:/boost_1_78_0/stage/lib")
+if(WIN32)
+  message("Version BOOST for Windows")
+  set(Boost_INCLUDE_DIR "C:/boost/boost_1_78_0")
+  set(Boost_LYBRARY_DIR "C:/boost_1_78_0/stage/lib")
+elseif((UNIX))
+  message("Version BOOST for Linux")
+  set(Boost_INCLUDE_DIR "/usr/local/boost_1_77_0")
+  set(Boost_LYBRARY_DIR "/usr/local/boost_1_77_0/stage/lib")
+endif()
 
 if(POLICY CMP0074)
   message("Set POLICY CMP0074 NEW FOR BOOST FIND PACKAGE")

@@ -13,17 +13,18 @@ void alphaWindow::startLoop()
            loopaskue->wait_and_pop(dataparse);
            pars->parse(dataparse);
         }
-        pcout{} << "Log reader stop\n";
+        pcout{} << "Log reader " << logreader.status_s() << "\n";
     }
     else
     {
-        pcout{} << "Log file not found\n";
+        pcout{} << "Log reader " << logreader.status_s() << "\n";
     }
 }
 
 void alphaWindow::stopLoop()
 {
     logreader.stop();
+    pcout{} << "Log reader " << logreader.status_s() << "\n";
 }
 
 void alphaWindow::thredParseStart()

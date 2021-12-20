@@ -61,6 +61,7 @@ public:
     void stop();
 
     bool status() const noexcept;
+    std::string status_s() const noexcept;
 
     std::filesystem::path getPatch() const noexcept;
 
