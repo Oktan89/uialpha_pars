@@ -1,6 +1,18 @@
 #include <QPushButton>
+#include <algorithm>
 #include "mainwin.h"
 #include <thread>
+
+alphaWindow::alphaWindow(std::shared_ptr<IBaseParser> pars) : pars(pars)
+{
+    menubar = new QMenuBar(this);
+    menubar->setGeometry(QRect(0, 0, 866, 20));
+    menu = new QMenu("Menu");
+    menu->addAction("start", &alphaWindow::pushStart);
+    menu->addAction("stop", &alphaWindow::pushStop);
+    menubar->addMenu(menu);
+
+}
 
 void alphaWindow::startLoop()
 {
@@ -52,7 +64,7 @@ alphaWindow::~alphaWindow()
 
 }
 
-hBox::hBox(std::shared_ptr<Database> data, QWidget *parent) :  QHBoxLayout(parent), _data(data)
+hBox::hBox(std::shared_ptr<Database> data, QWidget *parent) :  QGridLayout(parent), _data(data)
 {
     QObject::connect(this, &hBox::signalSetObject, this, &hBox::setNewObject);
     QObject::connect(this, &hBox::signalUpdateObject, this, &hBox::updateObject);
@@ -72,10 +84,39 @@ void hBox::setNewObject(int key)
 {
     auto object(_data->getObject(key));
     auto button = new QPushButton(object.getName().c_str());
-    addWidget(button);
+
+    QSizePolicy sizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    button->setSizePolicy(sizePolicy);
+
+    addWidget(setStatusPollAskueObject(button, object), y, x);
+    _databutton[object.getId()] = button;
+    (x < 10 )? (++x) : (++y, x = 0); 
 }
 
 void hBox::updateObject(int key)
 {
-    pcout{} << "update" << key << "\n";
+    auto itbut = _databutton.find(key);
+    auto itobj = _data->getObject(key);
+    itbut->second = setStatusPollAskueObject(itbut->second, itobj);
+}
+
+QPushButton* hBox::setStatusPollAskueObject(QPushButton *button, const ObjectAskue& object)
+{
+    
+    switch(object.getStatus())
+    {
+        case STATUSOBJECT::START_POLL:
+        button->setStyleSheet("QPushButton { background-color: green;}\n");
+        break;
+        case STATUSOBJECT::STOP_POLL:
+        button->setStyleSheet("QPushButton { background-color: red;}\n");
+        break;
+        case STATUSOBJECT::WAIT_START_POLL:
+        button->setStyleSheet("QPushButton { background-color: yellow;}\n");
+        break;
+        default:
+        button->setStyleSheet("QPushButton { background-color: gray;}\n");
+        break;
+    }
+    return  button;
 }

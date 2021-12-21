@@ -32,12 +32,13 @@ int main(int argc, char** argv)
     data->setBox(hboxlayout);
     auto buttonStart = new QPushButton("start");
     auto buttonStop = new QPushButton("stop");
-    hboxlayout->addWidget(buttonStart);
-    hboxlayout->addWidget(buttonStop);
+    hboxlayout->addWidget(buttonStart, 0, 0);
+    hboxlayout->addWidget(buttonStop, 0, 1);
    
     QWidget::connect(buttonStart, &QPushButton::clicked, window, &alphaWindow::pushStart);
     QWidget::connect(buttonStop, &QPushButton::clicked, window, &alphaWindow::pushStop);
-   
+    
+    window->setWindowState(Qt::WindowMaximized);
     window->show();   
     
     return app.exec();
