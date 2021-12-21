@@ -28,15 +28,11 @@ int main(int argc, char** argv)
 
     QApplication app(argc, argv);
     auto  window = new alphaWindow(pars);
-    auto hboxlayout = new hBox(data, window);
+    auto centralwidget = new QWidget(window);
+    centralwidget->setAutoFillBackground(false);
+    window->setCentralWidget(centralwidget);
+    auto hboxlayout = new hBox(data, centralwidget);
     data->setBox(hboxlayout);
-    auto buttonStart = new QPushButton("start");
-    auto buttonStop = new QPushButton("stop");
-    hboxlayout->addWidget(buttonStart, 0, 0);
-    hboxlayout->addWidget(buttonStop, 0, 1);
-   
-    QWidget::connect(buttonStart, &QPushButton::clicked, window, &alphaWindow::pushStart);
-    QWidget::connect(buttonStop, &QPushButton::clicked, window, &alphaWindow::pushStop);
     
     window->setWindowState(Qt::WindowMaximized);
     window->show();   

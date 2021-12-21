@@ -5,19 +5,20 @@
 
 alphaWindow::alphaWindow(std::shared_ptr<IBaseParser> pars) : pars(pars)
 {
-    menubar = new QMenuBar(this);
-    menubar->setGeometry(QRect(0, 0, 866, 20));
-    menu = new QMenu("Menu");
-    menu->addAction("start", &alphaWindow::pushStart);
-    menu->addAction("stop", &alphaWindow::pushStop);
-    menubar->addMenu(menu);
+   start = new QAction("Start", this);
+   stop = new QAction("Stop", this);
+   menu = menuBar()->addMenu("Menu");
+   menu->addAction(start);
+   menu->addAction(stop);
+   connect(start, &QAction::triggered, this, &alphaWindow::pushStart);
+   connect(stop, &QAction::triggered, this, &alphaWindow::pushStop);
 
 }
 
 void alphaWindow::startLoop()
 {
     loopaskue = std::make_shared<threadsafe_queue<std::string>>();
-    logreader.intit(false);
+    logreader.intit();
     std::string dataparse;
     if(std::filesystem::exists(logreader.getPatch()))
     {
@@ -68,6 +69,7 @@ hBox::hBox(std::shared_ptr<Database> data, QWidget *parent) :  QGridLayout(paren
 {
     QObject::connect(this, &hBox::signalSetObject, this, &hBox::setNewObject);
     QObject::connect(this, &hBox::signalUpdateObject, this, &hBox::updateObject);
+    //_data->setBox(this);
 }
 
 void hBox::addAskueObject(int key)

@@ -1,5 +1,6 @@
 #pragma once
 #include <QWidget>
+#include <QMainWindow>
 #include <QHBoxLayout>
 #include <QGridLayout>
 #include <QPushButton>
@@ -13,7 +14,7 @@
 #include "database.h"
 
 
-class alphaWindow : public QWidget
+class alphaWindow : public QMainWindow
 {
     Q_OBJECT
     Logreader logreader;
@@ -21,7 +22,9 @@ class alphaWindow : public QWidget
     std::shared_ptr<threadsafe_queue<std::string>> loopaskue;
     std::shared_ptr<IBaseParser> pars;
 
-    QMenuBar *menubar;
+    QAction *start;
+    QAction *stop;
+    //QMenuBar *menubar;
     QMenu *menu;
 
     void thredParseStart();
@@ -56,6 +59,6 @@ signals:
     void signalUpdateObject(int key);
 private:
     QPushButton* setStatusPollAskueObject(QPushButton *button, const ObjectAskue& object);
-    int x = 2;
+    int x = 0;
     int y = 0;
 };
