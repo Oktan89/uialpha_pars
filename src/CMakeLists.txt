@@ -30,6 +30,7 @@ endif()
 
 #qt5_generate_moc(main.cpp main.moc TARGET QtWeb)
 qt5_wrap_cpp (MAIN_SOURCES ${MY_INCLUDE_DIR}/mainwin.h)
+#qt5_wrap_cpp (MAIN_SOURCES ${MY_INCLUDE_DIR}/database.h)
 #------------------------------------------
 
 #---------------BOOST----------------------

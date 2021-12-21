@@ -1,3 +1,4 @@
+#include <QPushButton>
 #include "mainwin.h"
 #include <thread>
 
@@ -49,4 +50,16 @@ void alphaWindow::pushStop()
 alphaWindow::~alphaWindow()
 {
 
+}
+
+hBox::hBox(std::shared_ptr<Database> data, QWidget *parent) :  QHBoxLayout(parent), _data(data)
+{
+
+}
+
+void hBox::pushAskueObject(int key)
+{
+   ObjectAskue object = _data->getObject(key);
+   auto button = new QPushButton(object.getName().c_str());
+   this->addWidget(button);
 }

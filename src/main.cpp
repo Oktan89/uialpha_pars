@@ -28,11 +28,13 @@ int main(int argc, char** argv)
 
     QApplication app(argc, argv);
     auto  window = new alphaWindow(pars);
-    auto hboxlayout = new QHBoxLayout(window);
+    auto hboxlayout = new hBox(data, window);
+    data->setBox(hboxlayout);
     auto buttonStart = new QPushButton("start");
     auto buttonStop = new QPushButton("stop");
     hboxlayout->addWidget(buttonStart);
     hboxlayout->addWidget(buttonStop);
+   
     QWidget::connect(buttonStart, &QPushButton::clicked, window, &alphaWindow::pushStart);
     QWidget::connect(buttonStop, &QPushButton::clicked, window, &alphaWindow::pushStop);
    

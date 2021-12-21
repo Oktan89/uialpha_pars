@@ -1,7 +1,13 @@
-#include <database.h>
+#include "database.h"
 #include "logparser.h"
+#include "mainwin.h"
 
 std::string meterStatus_s(const ObjectPolling& meter);
+
+void Database::setBox(hBox *box)
+{
+    _box = box;
+}
 
 void Database::setObject(ObjectAskue& askue)
 {
@@ -12,6 +18,7 @@ void Database::setObject(ObjectAskue& askue)
         std::swap(it->second, askue); //Проверка имени происходит в коснтрукторе присваивания
         pcout{} << "Объект обновлен\n";
         showAskue(it->second);
+        _box->pushAskueObject(askue.getId());
     }
     else
     {
@@ -19,6 +26,11 @@ void Database::setObject(ObjectAskue& askue)
         pcout{} << "Объект добавлен\n";
         showAskue(obj);
     }
+}
+
+ObjectAskue &Database::getObject(int key)
+{
+    return _db[key];
 }
 
 void showAskue(const ObjectAskue& askue)

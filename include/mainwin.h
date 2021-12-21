@@ -1,10 +1,11 @@
 #pragma once
 #include <QWidget>
+#include <QHBoxLayout>
 #include "logreader.h"
 #include "threadsafe_queue.h"
 #include "logparser.h"
 #include "database.h"
-#include "pcout.h" // thread safe cout
+
 
 class alphaWindow : public QWidget
 {
@@ -23,5 +24,16 @@ public:
 public slots:
     void pushStart();
     void pushStop();
+
+};
+
+class hBox : public QHBoxLayout
+{
+    Q_OBJECT
+ std::shared_ptr<Database> _data;
+public:
+    hBox(std::shared_ptr<Database> data, QWidget *parent = nullptr);
+
+   void pushAskueObject(int key);
 
 };
