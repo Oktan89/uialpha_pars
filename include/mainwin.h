@@ -10,6 +10,7 @@ class alphaWindow : public QWidget
 {
     Q_OBJECT
     Logreader logreader;
+    std::thread run;
     std::shared_ptr<threadsafe_queue<std::string>> loopaskue;
     std::shared_ptr<IBaseParser> pars;
     void thredParseStart();
@@ -18,6 +19,7 @@ class alphaWindow : public QWidget
 
 public:
     alphaWindow(std::shared_ptr<IBaseParser> pars) : pars(pars){}
+    ~alphaWindow();
 public slots:
     void pushStart();
     void pushStop();

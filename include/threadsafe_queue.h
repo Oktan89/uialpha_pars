@@ -38,6 +38,13 @@ public:
         _queue.pop();
     }
 
+    void end_push()
+    {
+        std::unique_lock<std::mutex> ul(_mut);
+         _queue.push("[exit logreader]");
+        _cv.notify_one();
+    }
+
     std::shared_ptr<T> wait_and_pop()
     {
         std::unique_lock<std::mutex> ul(_mut);

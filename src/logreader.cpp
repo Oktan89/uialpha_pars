@@ -92,7 +92,7 @@ void Logreader::thred_log_read(std::shared_ptr<threadsafe_queue<std::string>> qu
 
             if (_file.is_open())
             {
-                _status = Logerstatus::LOG_FILE_OK;
+                _status = Logerstatus::LOG_FILE_RUN;
                 //читаем новую позицию курсора в конце файла
                 auto gnew = _file.tellg();
                 //если сохраненая позиция меньше то нужно прочитать новую запись в отслеживаемом файле
@@ -129,20 +129,22 @@ void Logreader::thred_log_read(std::shared_ptr<threadsafe_queue<std::string>> qu
             }
         std::this_thread::sleep_for(std::chrono::milliseconds(timer_ms));
     }
-
+    _status = Logerstatus::LOG_FILE_STOP;
+    queue->end_push();
 }
 
 void Logreader::stop()
 {
     run = false;
+    
     if(_log_thread.joinable())
     {
-         #ifdef DEBUG
-            pcout{} << "[Thread Logreader "<<_log_thread.get_id()<<"]: stop\n";
+        #ifdef DEBUG
+            pcout{} << "[Thread Logreader "<<_log_thread.get_id()<<"]: stop... OK\n";
         #endif
         _log_thread.join();
+        _status = Logerstatus::LOG_FILE_STOP;
     }
-    _status = Logerstatus::LOG_FILE_STOP;
 }
 
 Logreader::~Logreader()

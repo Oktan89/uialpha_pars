@@ -11,27 +11,29 @@ void alphaWindow::startLoop()
         for(auto run = logreader.start(loopaskue, 500); run ; run = logreader.status())
         {
            loopaskue->wait_and_pop(dataparse);
-           pars->parse(dataparse);
+           if(dataparse != "[exit logreader]")
+           {
+               pars->parse(dataparse);
+           }
         }
-        pcout{} << "Log reader " << logreader.status_s() << "\n";
     }
     else
     {
         pcout{} << "File not found" << logreader.getPatch() <<"\n";
     }
-    pcout{} << "Exit threadParserStart\n";
+    pcout{} << "[threadParserUI] stop... OK\n";
 }
 
 void alphaWindow::stopLoop()
 {
     logreader.stop();
-    pcout{} << "Log reader " << logreader.status_s() << "\n";
 }
 
 void alphaWindow::thredParseStart()
 {
-    std::thread run(&alphaWindow::startLoop, this);
-    run.detach();///Косяк !!!! удалить процесс
+    run = std::thread(&alphaWindow::startLoop, this);
+    pcout{} << "[threadParserUI" << run.get_id() << "] start... OK\n";
+    run.detach();
 }
 
 void alphaWindow::pushStart()
@@ -42,4 +44,9 @@ void alphaWindow::pushStart()
 void alphaWindow::pushStop()
 {
     stopLoop();
+}
+
+alphaWindow::~alphaWindow()
+{
+
 }
