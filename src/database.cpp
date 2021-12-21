@@ -18,13 +18,14 @@ void Database::setObject(ObjectAskue& askue)
         std::swap(it->second, askue); //Проверка имени происходит в коснтрукторе присваивания
         pcout{} << "Объект обновлен\n";
         showAskue(it->second);
-        _box->pushAskueObject(askue.getId());
+        _box->updateAskueObject(it->second.getId());
     }
     else
     {
         auto obj = _db[askue.getId()] = askue;
         pcout{} << "Объект добавлен\n";
         showAskue(obj);
+        _box->addAskueObject(obj.getId());
     }
 }
 

@@ -5,7 +5,7 @@
 void alphaWindow::startLoop()
 {
     loopaskue = std::make_shared<threadsafe_queue<std::string>>();
-    logreader.intit();
+    logreader.intit(false);
     std::string dataparse;
     if(std::filesystem::exists(logreader.getPatch()))
     {
@@ -54,12 +54,28 @@ alphaWindow::~alphaWindow()
 
 hBox::hBox(std::shared_ptr<Database> data, QWidget *parent) :  QHBoxLayout(parent), _data(data)
 {
-
+    QObject::connect(this, &hBox::signalSetObject, this, &hBox::setNewObject);
+    QObject::connect(this, &hBox::signalUpdateObject, this, &hBox::updateObject);
 }
 
-void hBox::pushAskueObject(int key)
+void hBox::addAskueObject(int key)
 {
-   ObjectAskue object = _data->getObject(key);
-   auto button = new QPushButton(object.getName().c_str());
-   this->addWidget(button);
+    emit signalSetObject(key);
+}
+
+void hBox::updateAskueObject(int key)
+{
+    emit signalUpdateObject(key);
+}
+
+void hBox::setNewObject(int key)
+{
+    auto object(_data->getObject(key));
+    auto button = new QPushButton(object.getName().c_str());
+    addWidget(button);
+}
+
+void hBox::updateObject(int key)
+{
+    pcout{} << "update" << key << "\n";
 }

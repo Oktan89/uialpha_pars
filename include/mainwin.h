@@ -34,6 +34,14 @@ class hBox : public QHBoxLayout
 public:
     hBox(std::shared_ptr<Database> data, QWidget *parent = nullptr);
 
-   void pushAskueObject(int key);
+   void addAskueObject(int key);
+   void updateAskueObject(int key);
+   
+public slots:
+    void setNewObject(int key);
+    void updateObject(int key);
+signals:
+    void signalSetObject(int key);
+    void signalUpdateObject(int key);
 
 };
