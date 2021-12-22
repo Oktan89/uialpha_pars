@@ -58,6 +58,7 @@ signals:
     void signalSetObject(int key);
     void signalUpdateObject(int key);
 private:
+    QString encodeWin1251ToUTF(const std::string& string);
     QPushButton* setStatusPollAskueObject(QPushButton *button, const ObjectAskue& object);
     int x = 0;
     int y = 0;
