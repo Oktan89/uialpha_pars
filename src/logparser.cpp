@@ -415,6 +415,16 @@ Time_stamp ObjectAskue::getStatusTime() const
     return time;
 }
 
+std::string ObjectAskue::getstatusTime_s() const
+{
+    Time_stamp time = getStatusTime();
+    std::string time_s;
+    time_s = std::to_string(time.day)+"/"+ std::to_string(time.mon)+"/"+
+    std::to_string(time.year)+" "+ std::to_string(time.hour) + ":" + std::to_string(time.min)+
+    ":" + std::to_string(time.sec); 
+    return time_s;
+}
+
 void ObjectAskue::setInterface(const Interface& port)
 {
     std::lock_guard<std::mutex> lg(_mutex);
@@ -513,6 +523,7 @@ ObjectAskue& ObjectAskue::operator=(const ObjectAskue& other)
     {
         if(_name_point == "unknown")
             _name_point = other._name_point;
+        _status = other._status;
         switch (other._status)
         {
         case STATUSOBJECT::START_POLL:

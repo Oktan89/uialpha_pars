@@ -104,6 +104,7 @@ public:
 
     void setTime(const STATUSOBJECT status, const Time_stamp& time);
     Time_stamp getStatusTime() const;
+    std::string getstatusTime_s() const;
 
     void setInterface(const Interface& port);
     Interface getInterface() const;

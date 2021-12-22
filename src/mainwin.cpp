@@ -71,7 +71,6 @@ hBox::hBox(std::shared_ptr<Database>& data, QWidget *parent) :  QGridLayout(pare
 {
     QObject::connect(this, &hBox::signalSetObject, this, &hBox::setNewObject);
     QObject::connect(this, &hBox::signalUpdateObject, this, &hBox::updateObject);
-    //_data->setBox(this);
 }
 
 void hBox::addAskueObject(int key)
@@ -94,7 +93,7 @@ void hBox::setNewObject(int key)
 
     addWidget(setStatusPollAskueObject(button, object), y, x);
     _databutton[object.getId()] = button;
-    (x < 10 )? (++x) : (++y, x = 0); 
+    (x < 9 )? (++x) : (++y, x = 0); 
 }
 
 void hBox::updateObject(int key)
@@ -106,49 +105,52 @@ void hBox::updateObject(int key)
 
 QPushButton* hBox::setStatusPollAskueObject(QPushButton *button, const ObjectAskue& object)
 {
-    button->setText(encodeWin1251ToUTF(object.getName()));
-    //button->setToolTip(encodeWin1251ToUTF(object.getStatus_s()));
-    //pcout{} <<"[--------------------]\n";
-    //pcout{} <<"[ID  : "<< askue.getId() <<" ]\n";
-    //pcout{} <<"[NAME: "<< askue.getName()<<" ]\n";
-    //pcout{} <<"[POLL STATUS: "<< askue.getStatus_s()<<" ";
+    std::string message("точка опроса:\n");
+    
+    message+= (object.getName() != "unknown")? object.getName() : std::to_string(object.getId());
+    message+= "\n" + object.getStatus_s();
     auto meter = object.getPollMeter();
+    //—начала проверка опроса счетчиков, из за возможного считывани€ нескольких статусов из логов и 
+    //запись их в мап быстрее чем отрабатывает GUI (поэтому здесь мы видем уже некий следующий статус
+    //объекта хот€ отправл€ли emitом другой (так же надо иметь ввиду что все отправленные emit все равно 
+    //выполн€ютс€))
+    switch (meter.status)
+    {
+    case STATUSPOLL::POLL_OK:
+        button->setStyleSheet("QPushButton { background-color: lime; font: bold 14px;}\n");
+        break;
+    case STATUSPOLL::POLL_ERROR:
+        button->setStyleSheet("QPushButton { background-color: salmon; font: bold 14px;}\n");
+        break;
+    default:
+        button->setStyleSheet("QPushButton { background-color: silver; font: bold 14px;}\n");
+        break;
+    }
     switch (object.getStatus())
     {
-        case STATUSOBJECT::START_POLL:
-            //pcout{} <<"[TIME: "<< askue.getStatusTime()<<" ]\n";
-           // pcout{} <<"[PORT: "<< askue.getInetrface_s()<<" ]\n";
-            break;
-        case STATUSOBJECT::STOP_POLL:
-            switch (meter.status)
-            {
-            case STATUSPOLL::POLL_OK:
-                button->setStyleSheet("QPushButton { background-color: green;}\n");
-                break;
-            case STATUSPOLL::POLL_ERROR:
-                button->setStyleSheet("QPushButton { background-color: red;}\n");
-                break;
-            default:
-                // button->setStyleSheet("QPushButton { background-color: gray;}\n");
-                break;
-            }
-           // pcout{} <<"[TIME: "<< askue.getStatusTime()<<" ]\n";
-           // pcout{} <<"[METER STATUS: "<< meterStatus_s(meter)<<" ]\n";
-           /*  for(const auto &m: meter.meter)
-                {
-                    if(!m.status_poll)
-                    {
-                        pcout{} << "    Meter: " << m.id <<" error, repit " << m.repit_poll <<"\n";
-                    }
-                }*/
-            break;
-        case STATUSOBJECT::WAIT_START_POLL:
-           // pcout{} <<"[TIME: "<< askue.getStatusTime()<<" ]\n";
-            break;
-        default:
-            break;
-    }
+    case STATUSOBJECT::START_POLL:
+        message += "\n" + object.getstatusTime_s();
+        // pcout{} <<"[PORT: "<< askue.getInetrface_s()<<" ]\n";
+        break;
+    case STATUSOBJECT::STOP_POLL:
 
+        message += "\n" + object.getstatusTime_s();
+        // pcout{} <<"[METER STATUS: "<< meterStatus_s(meter)<<" ]\n";
+        /*  for(const auto &m: meter.meter)
+             {
+                 if(!m.status_poll)
+                 {
+                     pcout{} << "    Meter: " << m.id <<" error, repit " << m.repit_poll <<"\n";
+                 }
+             }*/
+        break;
+    case STATUSOBJECT::WAIT_START_POLL:
+        message += "\n" + object.getstatusTime_s();
+        break;
+    default:
+        break;
+    }
+    button->setText(encodeWin1251ToUTF(message));
     return  button;
 }
 

@@ -32,6 +32,7 @@ void Database::setObject(ObjectAskue& askue)
 
 ObjectAskue &Database::getObject(int key)
 {
+    std::lock_guard<std::mutex> lg(_mx_map);
     return _db[key];
 }
 
