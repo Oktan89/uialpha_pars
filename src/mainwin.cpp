@@ -1,4 +1,5 @@
 #include <QPushButton>
+#include <QWidget>
 #include <QTextCodec>
 #include <algorithm>
 #include "mainwin.h"
@@ -117,7 +118,7 @@ QPushButton* hBox::setStatusPollAskueObject(QPushButton *button, const ObjectAsk
         button->setStyleSheet("QPushButton { background-color: red;}\n");
         break;
     default:
-        button->setStyleSheet("QPushButton { background-color: gray;}\n");
+        //button->setStyleSheet("QPushButton { background-color: gray;}\n");
         break;
     }
    /* switch(object.getStatus())

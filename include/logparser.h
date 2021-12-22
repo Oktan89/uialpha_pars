@@ -29,6 +29,7 @@ enum class STATUSPOLL
 {
     POLL_OK,
     POLL_ERROR,
+    POLL_UNKNOWN
 };
 
 struct Meter
@@ -43,7 +44,7 @@ struct ObjectPolling
 {
     STATUSPOLL status;
     std::vector<Meter> meter;
-    ObjectPolling() : status(STATUSPOLL::POLL_OK) {}
+    ObjectPolling() : status(STATUSPOLL::POLL_UNKNOWN) {}
 };
 
 //Структура времени в логах АЦ
