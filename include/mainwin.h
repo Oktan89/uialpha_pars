@@ -32,7 +32,7 @@ class alphaWindow : public QMainWindow
     void stopLoop();
 
 public:
-    alphaWindow(std::shared_ptr<IBaseParser> pars);
+    alphaWindow(std::shared_ptr<IBaseParser>& pars);
     ~alphaWindow();
 public slots:
     void pushStart();
@@ -46,7 +46,7 @@ class hBox : public QGridLayout
  std::shared_ptr<Database> _data;
     std::map<int, QPushButton *> _databutton;
 public:
-    hBox(std::shared_ptr<Database> data, QWidget *parent = nullptr);
+    hBox(std::shared_ptr<Database>& data, QWidget *parent = nullptr);
 
    void addAskueObject(int key);
    void updateAskueObject(int key);

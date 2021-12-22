@@ -91,9 +91,9 @@ public:
     _id(), _name_point("unknown"), _interface(), _time(), _status(STATUSOBJECT::UNKNOWN), _pollmeter() {}
     
     ObjectAskue(const ObjectAskue& object);
-    
+    //ObjectAskue(ObjectAskue&& object);
     ObjectAskue& operator=(const ObjectAskue& other);
-    
+    //ObjectAskue& operator=(const ObjectAskue&& other);  
     ~ObjectAskue(){}
 
     void setId(int id);
@@ -156,7 +156,7 @@ class ParseLogSrv : public IBaseParser
     bool splitRecord(const std::string& log, std::vector<std::string> &record, const char* head);
     
 public:
-    ParseLogSrv(std::shared_ptr<Database> data) : _data(data){}
+    ParseLogSrv(std::shared_ptr<Database>& data) : _data(data){}
     void parse(const std::string& log) override;
 
     ~ParseLogSrv(){}

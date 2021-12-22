@@ -15,7 +15,8 @@ void Database::setObject(ObjectAskue& askue)
     auto it = _db.find(askue.getId());
     if (it != _db.end())
     {
-        std::swap(it->second, askue); //Проверка имени происходит в коснтрукторе присваивания и статуса
+        //std::swap(it->second, askue); //Проверка имени происходит в коснтрукторе присваивания и статуса
+        _db[it->first] = askue;
         pcout{} << "Объект обновлен\n";
         showAskue(it->second);
         _box->updateAskueObject(it->second.getId());

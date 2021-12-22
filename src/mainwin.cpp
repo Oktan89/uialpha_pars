@@ -5,7 +5,7 @@
 #include "mainwin.h"
 #include <thread>
 
-alphaWindow::alphaWindow(std::shared_ptr<IBaseParser> pars) : pars(pars)
+alphaWindow::alphaWindow(std::shared_ptr<IBaseParser>& pars) : pars(pars)
 {
    start = new QAction("Start", this);
    stop = new QAction("Stop", this);
@@ -67,7 +67,7 @@ alphaWindow::~alphaWindow()
 
 }
 
-hBox::hBox(std::shared_ptr<Database> data, QWidget *parent) :  QGridLayout(parent), _data(data)
+hBox::hBox(std::shared_ptr<Database>& data, QWidget *parent) :  QGridLayout(parent), _data(data)
 {
     QObject::connect(this, &hBox::signalSetObject, this, &hBox::setNewObject);
     QObject::connect(this, &hBox::signalUpdateObject, this, &hBox::updateObject);
@@ -100,42 +100,55 @@ void hBox::setNewObject(int key)
 void hBox::updateObject(int key)
 {
     auto itbut = _databutton.find(key);
-    auto itobj = _data->getObject(key);
+    auto itobj = _data->getObject(itbut->first);
     _databutton[key] = setStatusPollAskueObject(itbut->second, itobj);
 }
 
 QPushButton* hBox::setStatusPollAskueObject(QPushButton *button, const ObjectAskue& object)
 {
     button->setText(encodeWin1251ToUTF(object.getName()));
-  
+    //button->setToolTip(encodeWin1251ToUTF(object.getStatus_s()));
+    //pcout{} <<"[--------------------]\n";
+    //pcout{} <<"[ID  : "<< askue.getId() <<" ]\n";
+    //pcout{} <<"[NAME: "<< askue.getName()<<" ]\n";
+    //pcout{} <<"[POLL STATUS: "<< askue.getStatus_s()<<" ";
     auto meter = object.getPollMeter();
-    switch (meter.status)
-    {
-    case STATUSPOLL::POLL_OK :
-        button->setStyleSheet("QPushButton { background-color: green;}\n");
-        break;
-    case STATUSPOLL::POLL_ERROR :
-        button->setStyleSheet("QPushButton { background-color: red;}\n");
-        break;
-    default:
-        //button->setStyleSheet("QPushButton { background-color: gray;}\n");
-        break;
-    }
-   /* switch(object.getStatus())
+    switch (object.getStatus())
     {
         case STATUSOBJECT::START_POLL:
-        button->setStyleSheet("QPushButton { background-color: green;}\n");
-        break;
+            //pcout{} <<"[TIME: "<< askue.getStatusTime()<<" ]\n";
+           // pcout{} <<"[PORT: "<< askue.getInetrface_s()<<" ]\n";
+            break;
         case STATUSOBJECT::STOP_POLL:
-        button->setStyleSheet("QPushButton { background-color: red;}\n");
-        break;
+            switch (meter.status)
+            {
+            case STATUSPOLL::POLL_OK:
+                button->setStyleSheet("QPushButton { background-color: green;}\n");
+                break;
+            case STATUSPOLL::POLL_ERROR:
+                button->setStyleSheet("QPushButton { background-color: red;}\n");
+                break;
+            default:
+                // button->setStyleSheet("QPushButton { background-color: gray;}\n");
+                break;
+            }
+           // pcout{} <<"[TIME: "<< askue.getStatusTime()<<" ]\n";
+           // pcout{} <<"[METER STATUS: "<< meterStatus_s(meter)<<" ]\n";
+           /*  for(const auto &m: meter.meter)
+                {
+                    if(!m.status_poll)
+                    {
+                        pcout{} << "    Meter: " << m.id <<" error, repit " << m.repit_poll <<"\n";
+                    }
+                }*/
+            break;
         case STATUSOBJECT::WAIT_START_POLL:
-        button->setStyleSheet("QPushButton { background-color: yellow;}\n");
-        break;
+           // pcout{} <<"[TIME: "<< askue.getStatusTime()<<" ]\n";
+            break;
         default:
-        button->setStyleSheet("QPushButton { background-color: gray;}\n");
-        break;
-    }*/
+            break;
+    }
+
     return  button;
 }
 

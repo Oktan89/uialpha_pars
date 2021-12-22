@@ -417,16 +417,19 @@ Time_stamp ObjectAskue::getStatusTime() const
 
 void ObjectAskue::setInterface(const Interface& port)
 {
+    std::lock_guard<std::mutex> lg(_mutex);
     _interface = port;
 }
 
 Interface ObjectAskue::getInterface() const
 {
+    std::lock_guard<std::mutex> lg(_mutex);
     return _interface;
 }
 
 std::string ObjectAskue::getInetrface_s() const
 {
+    std::lock_guard<std::mutex> lg(_mutex);
     std::string type;
     switch (_interface.type)
     {
@@ -446,11 +449,13 @@ std::string ObjectAskue::getInetrface_s() const
 
 STATUSOBJECT ObjectAskue::getStatus() const
 {
+    std::lock_guard<std::mutex> lg(_mutex);
     return _status;
 }
 
 std::string ObjectAskue::getStatus_s() const
 {
+    std::lock_guard<std::mutex> lg(_mutex);
     std::string status;
     switch (_status)
     {
@@ -473,11 +478,13 @@ std::string ObjectAskue::getStatus_s() const
 
 void ObjectAskue::setPollMeter(const ObjectPolling& meter)
 {
+    std::lock_guard<std::mutex> lg(_mutex);
     _pollmeter = meter;
 }
 
 ObjectPolling ObjectAskue::getPollMeter() const
 {
+    std::lock_guard<std::mutex> lg(_mutex);
     return _pollmeter;
 }
 
@@ -490,23 +497,50 @@ ObjectAskue::ObjectAskue(const ObjectAskue& object) :
 
 }
 
+/*ObjectAskue::ObjectAskue(ObjectAskue&& object) :
+ _id(object._id), _name_point(object._name_point), _interface(object._interface),
+ _time(object._time), _status(object._status), _pollmeter(object._pollmeter)
+{
+
+}*/
+
 ObjectAskue& ObjectAskue::operator=(const ObjectAskue& other)
 {
+
     if(this == &other)
         return *this;
     if(_id == other._id)
     {
         if(_name_point == "unknown")
             _name_point = other._name_point;
+        switch (other._status)
+        {
+        case STATUSOBJECT::START_POLL:
+            _time.start_pool = other._time.start_pool;
+            _interface = other._interface;
+            break;
+        case STATUSOBJECT::STOP_POLL:
+            _time.end_pool = other._time.end_pool;
+            _pollmeter.status = other._pollmeter.status;
+            _pollmeter.meter = other._pollmeter.meter;
+            break;
+        case STATUSOBJECT::WAIT_START_POLL:
+            _time.next_pool = other._time.next_pool;
+            break;
+        default:
+            pcout{}<<"contructor = ERROR\n";
+            break;
+        }
     }
     else
     {
         _id = other._id;
         _name_point = other._name_point;
+         _interface = other._interface;
+        _time = other._time;
+        _status = other._status;
+        _pollmeter = other._pollmeter;
     }
-    _interface = other._interface;
-    _time = other._time;
-    _status = other._status;
-    _pollmeter = other._pollmeter;
+   
     return *this;
 }
