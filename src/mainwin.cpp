@@ -106,7 +106,21 @@ void hBox::updateObject(int key)
 QPushButton* hBox::setStatusPollAskueObject(QPushButton *button, const ObjectAskue& object)
 {
     button->setText(encodeWin1251ToUTF(object.getName()));
-    switch(object.getStatus())
+  
+    auto meter = object.getPollMeter();
+    switch (meter.status)
+    {
+    case STATUSPOLL::POLL_OK :
+        button->setStyleSheet("QPushButton { background-color: green;}\n");
+        break;
+    case STATUSPOLL::POLL_ERROR :
+        button->setStyleSheet("QPushButton { background-color: red;}\n");
+        break;
+    default:
+        button->setStyleSheet("QPushButton { background-color: gray;}\n");
+        break;
+    }
+   /* switch(object.getStatus())
     {
         case STATUSOBJECT::START_POLL:
         button->setStyleSheet("QPushButton { background-color: green;}\n");
@@ -120,7 +134,7 @@ QPushButton* hBox::setStatusPollAskueObject(QPushButton *button, const ObjectAsk
         default:
         button->setStyleSheet("QPushButton { background-color: gray;}\n");
         break;
-    }
+    }*/
     return  button;
 }
 
