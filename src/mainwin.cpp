@@ -1,4 +1,5 @@
 #include <QPushButton>
+#include <QTextCodec>
 #include <algorithm>
 #include "mainwin.h"
 #include <thread>
@@ -85,7 +86,10 @@ void hBox::updateAskueObject(int key)
 void hBox::setNewObject(int key)
 {
     auto object(_data->getObject(key));
-    auto button = new QPushButton(object.getName().c_str());
+    QByteArray encodedString = object.getName().c_str();
+    QTextCodec *codec = QTextCodec::codecForName("Windows-1251");
+    QString object_name = codec->toUnicode(encodedString);
+    auto button = new QPushButton(object_name);
 
     QSizePolicy sizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
     button->setSizePolicy(sizePolicy);
@@ -99,7 +103,7 @@ void hBox::updateObject(int key)
 {
     auto itbut = _databutton.find(key);
     auto itobj = _data->getObject(key);
-    itbut->second = setStatusPollAskueObject(itbut->second, itobj);
+    _databutton[key] = setStatusPollAskueObject(itbut->second, itobj);
 }
 
 QPushButton* hBox::setStatusPollAskueObject(QPushButton *button, const ObjectAskue& object)
