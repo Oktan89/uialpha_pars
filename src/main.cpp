@@ -30,10 +30,14 @@ int main(int argc, char** argv)
     auto  window = new alphaWindow(pars);
     auto centralwidget = new QWidget(window);
     centralwidget->setAutoFillBackground(false);
+    
+    
     window->setCentralWidget(centralwidget);
     auto hboxlayout = new hBox(data, centralwidget);
     data->setBox(hboxlayout);
+ 
     
+
     window->setWindowState(Qt::WindowMaximized);
     window->show();   
     
